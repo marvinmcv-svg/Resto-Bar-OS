@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "RestaurantOS",
+    "slug": "restaurant-os",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "platforms": ["ios", "android"],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0a0a0a"
+    },
+    "extra": {
+      "apiUrl": "http://localhost:3001",
+      "eas": {
+        "projectId": "restaurant-os"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.restaurantos.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0a0a"
+      },
+      "package": "com.restaurantos.mobile"
+    }
+  }
+}

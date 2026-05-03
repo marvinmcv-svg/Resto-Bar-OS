@@ -1,0 +1,22 @@
+{
+  "name": "restaurant-os",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev --parallel",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "clean": "turbo clean"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "@prettier/plugin-sort-pnpm-lock": "^1.0.0",
+    "turbo": "^2.0.0"
+  }
+}
