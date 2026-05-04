@@ -1,26 +1,30 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
-RUN npm ci
+
+# Install deps and generate Prisma client
+RUN npm install
 RUN npx prisma generate
 
+# Copy source and build
 COPY . .
 RUN npm run build
 
+# Production image
 FROM node:20-alpine
 WORKDIR /app
 
-RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001
+RUN apk add --no-cache libc6-compat
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package.json ./
 
-COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
-COPY --from=builder --chown=nestjs:nodejs /app/tsconfig.build.json ./tsconfig.build.json
-
-USER nestjs
+ENV NODE_ENV=production
+ENV PORT=3001
 
 EXPOSE 3001
 
