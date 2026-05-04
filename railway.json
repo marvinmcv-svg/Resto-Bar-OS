@@ -1,29 +1,35 @@
 {
+  "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "cd apps/api && npx prisma generate && cd ../.. && npm run build",
-    "startCommand": "cd apps/api && npm run start:prod"
+    "buildCommand": "npm install && npx prisma generate && npm run build",
+    "startCommand": "npm run start:prod"
   },
   "deploy": {
     "numReplicas": 1,
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   },
-  "environments": {
-    "api": {
+  "services": [
+    {
+      "name": "api",
+      "rootDirectory": "apps/api",
       "build": {
         "builder": "NIXPACKS",
-        "buildCommand": "cd apps/api && npx prisma generate && npm run build",
-        "startCommand": "cd apps/api && npm run start:prod"
-      }
-    },
-    "web": {
-      "build": {
-        "builder": "NIXPACKS",
-        "buildCommand": "cd apps/web && npm run build",
-        "startCommand": "cd apps/web && npm run start"
+        "buildCommand": "npm install && npx prisma generate && npm run build",
+        "startCommand": "npm run start:prod"
       },
-      "rootDirectory": "apps/web"
+      "environment": ["DATABASE_URL", "JWT_SECRET", "NODE_ENV", "PORT", "ALLOWED_ORIGINS", "API_BASE_URL", "FRONTEND_URL"]
+    },
+    {
+      "name": "web",
+      "rootDirectory": "apps/web",
+      "build": {
+        "builder": "NIXPACKS",
+        "buildCommand": "npm install && npm run build",
+        "startCommand": "npm run start"
+      },
+      "environment": ["NEXT_PUBLIC_API_BASE_URL"]
     }
-  }
+  ]
 }

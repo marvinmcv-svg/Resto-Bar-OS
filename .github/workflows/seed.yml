@@ -1,0 +1,46 @@
+name: Seed Production Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Seed action'
+        required: true
+        default: 'seed'
+        type: choice
+        options:
+          - seed
+          - db-push
+
+jobs:
+  seed:
+    name: Run DB Migration / Seed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Railway CLI
+        run: npm install -g railway
+
+      - name: Run Prisma DB Push
+        if: github.event.inputs.action == 'db-push'
+        run: |
+          railway login --token ${{ secrets.RAILWAY_API_TOKEN }}
+          railway run --service api npx prisma db push
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run Seed
+        if: github.event.inputs.action == 'seed'
+        run: |
+          railway login --token ${{ secrets.RAILWAY_API_TOKEN }}
+          railway run --service api npm run prisma:seed:all
+        env:
+          RAILWAY_API_TOKEN: ${{ secrets.RAILWAY_API_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
