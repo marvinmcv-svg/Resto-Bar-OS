@@ -1,10 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { EventsGateway } from '../events/events.gateway';
 import { OrderStatus, OrderSource, ItemStatus } from '@prisma/client';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private events: EventsGateway,
+  ) {}
 
   async createOrder(dto: any, tenantId: string) {
     const table = await this.prisma.table.findFirst({ where: { id: dto.tableId, tenantId } });
@@ -66,6 +70,7 @@ export class OrdersService {
     });
 
     await this.deductInventory(order.id);
+    this.events.emitOrderFired(tenantId, order);
     return order;
   }
 

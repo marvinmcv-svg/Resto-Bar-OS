@@ -34,8 +34,13 @@ model Tenant {
   ingredients Ingredient[]
   suppliers Supplier[]
   wasteLogs WasteLog[]
-  sessions     Session[]
   notifications Notification[]
+  reservations  Reservation[]
+  payments      Payment[]
+  emailCampaigns EmailCampaign[]
+  shifts        Shift[]
+  timeClockEntries TimeClockEntry[]
+  recipes       Recipe[]
 }
 
 model User {
