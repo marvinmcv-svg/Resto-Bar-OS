@@ -78,7 +78,11 @@ export class StaffController {
   // Tips
   @Post('tips/distribute')
   @ApiOperation({ summary: 'Distribute tips for an order' })
-  async distributeTips(@Body('orderId') orderId: string, @Body('tipAmount') tipAmount: number) {
-    return this.staffService.distributeTips(orderId, tipAmount);
+  async distributeTips(
+    @TenantId() tenantId: string,
+    @Body('orderId') orderId: string,
+    @Body('tipAmount') tipAmount: number,
+  ) {
+    return this.staffService.distributeTips(tenantId, orderId, tipAmount);
   }
 }

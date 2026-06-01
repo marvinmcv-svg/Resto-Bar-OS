@@ -1,12 +1,19 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { EventsGateway } from '../events/events.gateway';
+import { EmailService } from '../email/email.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationStatus, TableStatus } from '@prisma/client';
+import { format } from 'date-fns';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private events: EventsGateway,
+    private email: EmailService,
+  ) {}
 
   async create(dto: CreateReservationDto, tenantId: string) {
     const date = new Date(dto.date);
@@ -45,7 +52,7 @@ export class ReservationsService {
       if (table) tableId = table.id;
     }
 
-    return this.prisma.reservation.create({
+    const reservation = await this.prisma.reservation.create({
       data: {
         tenantId,
         guestId,
@@ -65,7 +72,28 @@ export class ReservationsService {
         depositRequired: dto.depositRequired || false,
         depositAmount: dto.depositRequired ? 50 : undefined,
       },
+      include: { tenant: true },
     });
+
+    this.events.emitNewReservation(tenantId, reservation);
+
+    if (reservation.guestEmail) {
+      this.email.sendReservationConfirmation({
+        guestFirstName: reservation.guestFirstName,
+        guestEmail: reservation.guestEmail,
+        date: format(new Date(reservation.date), 'EEEE, MMMM d, yyyy'),
+        time: reservation.time,
+        partySize: reservation.partySize,
+        restaurantName: reservation.tenant.name,
+      }).then(() =>
+        this.prisma.reservation.update({
+          where: { id: reservation.id },
+          data: { confirmationSent: true },
+        }),
+      );
+    }
+
+    return reservation;
   }
 
   async findAll(tenantId: string, date?: string) {

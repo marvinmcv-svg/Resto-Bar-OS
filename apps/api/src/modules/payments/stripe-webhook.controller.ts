@@ -24,7 +24,7 @@ export class StripeWebhookController {
   private readonly logger = new Logger(StripeWebhookController.name);
 
   constructor(
-    @Inject('StripeService') private readonly stripeService: { constructWebhookEvent(payload: string, signature: string): WebhookEvent | Promise<WebhookEvent> },
+    @Inject('StripeService') private readonly stripeService: { constructWebhookEvent(payload: Buffer | string, signature: string): WebhookEvent | Promise<WebhookEvent> },
     private readonly paymentsService: PaymentsService,
   ) {}
 
@@ -50,7 +50,7 @@ export class StripeWebhookController {
 
     try {
       event = this.stripeService.constructWebhookEvent(
-        payload.toString('utf8'),
+        payload,
         signature,
       ) as WebhookEvent;
     } catch (err) {

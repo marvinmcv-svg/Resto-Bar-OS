@@ -30,8 +30,8 @@ coverage/
 playwright-report/
 test-results/
 
-# Prisma
-apps/api/prisma/migrations/
+# Prisma - migrations should be committed
+# apps/api/prisma/migrations/
 
 # Turbo
 .turbo/

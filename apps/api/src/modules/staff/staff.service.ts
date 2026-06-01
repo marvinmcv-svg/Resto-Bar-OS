@@ -87,7 +87,7 @@ export class StaffService {
 
     const totalSales = orders.reduce((sum, o) => sum + Number(o.total), 0);
     const totalTips = orders.reduce((sum, o) => sum + Number(o.tip), 0);
-    const totalCovers = orders.reduce((sum, o) => sum => sum, 0);
+    const totalCovers = orders.reduce((sum, o) => sum + o.items.reduce((s, i) => s + i.quantity, 0), 0);
     const avgTipPercent = totalSales > 0 ? (totalTips / totalSales) * 100 : 0;
 
     return {

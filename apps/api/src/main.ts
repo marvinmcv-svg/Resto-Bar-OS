@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TenantMiddleware } from './middleware/tenant.middleware';
+import { PrismaService } from './database/prisma.service';
 import { Logger } from 'pino';
 
 async function bootstrap() {

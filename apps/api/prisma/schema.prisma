@@ -34,8 +34,13 @@ model Tenant {
   ingredients Ingredient[]
   suppliers Supplier[]
   wasteLogs WasteLog[]
-  sessions     Session[]
   notifications Notification[]
+  reservations  Reservation[]
+  payments      Payment[]
+  emailCampaigns EmailCampaign[]
+  shifts        Shift[]
+  timeClockEntries TimeClockEntry[]
+  recipes       Recipe[]
 }
 
 model User {
@@ -327,6 +332,7 @@ model Order {
   tax           Decimal  @db.Decimal(10,2)
   total         Decimal  @db.Decimal(10,2)
   tip           Decimal  @db.Decimal(10,2) @default(0)
+  payments      Payment[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -398,6 +404,7 @@ model Payment {
   splitOf      String?
   processedAt   DateTime?
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 enum PaymentMethod {
