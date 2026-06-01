@@ -91,3 +91,14 @@ export function useChangeReservationStatus() {
     },
   });
 }
+
+export function useUpdateReservationNotes() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, notes }: { id: string; notes: string }) =>
+      apiClient.patch<ReservationListItem>(`/reservations/${id}`, { notes }).then(r => r.data),
+    onSuccess: (_, vars) => {
+      qc.invalidateQueries({ queryKey: ['reservation', vars.id] });
+    },
+  });
+}

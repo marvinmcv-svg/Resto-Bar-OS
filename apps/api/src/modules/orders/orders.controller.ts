@@ -31,6 +31,6 @@ export class OrdersController {
   @Get(':id')
   @ApiOperation({ summary: 'Get order by ID' })
   async findOne(@Param('id') id: string, @TenantId() tenantId: string) {
-    return this.ordersService.findAll(tenantId).then(orders => orders.find(o => o.id === id));
+    return this.ordersService.findOne(id, tenantId);
   }
 }

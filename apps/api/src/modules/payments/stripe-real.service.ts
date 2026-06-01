@@ -24,15 +24,22 @@ export class StripeRealService {
     });
   }
 
-  async refundPayment(paymentIntentId: string) {
-    return this.stripe.refunds.create({ payment_intent: paymentIntentId });
+  async confirmPayment(paymentIntentId: string) {
+    return this.stripe.paymentIntents.confirm(paymentIntentId);
   }
 
-  async constructWebhookEvent(payload: Buffer, signature: string) {
+  async createRefund(paymentIntentId: string, amount?: number) {
+    return this.stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      ...(amount ? { amount: Math.round(amount * 100) } : {}),
+    });
+  }
+
+  constructWebhookEvent(payload: Buffer | string, signature: string) {
     return this.stripe.webhooks.constructEvent(
       payload,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      process.env.STRIPE_WEBHOOK_SECRET ?? '',
     );
   }
 }

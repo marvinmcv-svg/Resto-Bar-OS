@@ -18,6 +18,7 @@ export class AnalyticsService {
     ] = await Promise.all([
       this.prisma.order.findMany({
         where: { tenantId, orderedAt: { gte: today }, status: { in: ['PENDING', 'FIRED', 'IN_PROGRESS', 'READY', 'SERVED'] } },
+        include: { items: true },
       }),
       this.prisma.table.findMany({ where: { tenantId } }),
       this.prisma.order.findMany({
@@ -52,6 +53,7 @@ export class AnalyticsService {
         orderedAt: { gte: startDate, lte: endDate },
         status: 'COMPLETED',
       },
+      include: { items: true },
     });
 
     const totalRevenue = orders.reduce((sum, o) => sum + Number(o.total), 0);

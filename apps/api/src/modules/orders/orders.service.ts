@@ -116,6 +116,13 @@ export class OrdersService {
     }
   }
 
+  async findOne(id: string, tenantId: string) {
+    return this.prisma.order.findFirst({
+      where: { id, tenantId },
+      include: { table: true, server: true, guest: true, items: { include: { menuItem: true } } },
+    });
+  }
+
   async findAll(tenantId: string, status?: OrderStatus) {
     const where: any = { tenantId };
     if (status) where.status = status;

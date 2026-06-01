@@ -18,6 +18,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { PaymentsModule } from './modules/payments/payments.module';
 import { GroupsModule } from './modules/groups/groups.module';
 import { PublicBookingModule } from './modules/public-booking/public-booking.module';
+import { MenuModule } from './modules/menu/menu.module';
 import { EventsModule } from './modules/events/events.module';
 import { EmailModule } from './modules/email/email.module';
 import { QueueModule } from './modules/queue/queue.module';
@@ -43,6 +44,7 @@ import { HealthController } from './health.controller';
     PaymentsModule,
     GroupsModule,
     PublicBookingModule,
+    MenuModule,
     EventsModule,
     EmailModule,
     QueueModule,

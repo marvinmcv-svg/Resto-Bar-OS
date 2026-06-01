@@ -58,7 +58,9 @@ export const tablesApi = {
 };
 
 export const menuApi = {
-  getItems: () => apiClient.get('/menu'),
+  getItems: (category?: string) =>
+    apiClient.get('/menu', { params: category ? { category } : undefined }),
+  getCategories: () => apiClient.get('/menu/categories'),
 };
 
 export const ordersApi = {
@@ -73,6 +75,8 @@ export const ordersApi = {
 };
 
 export const kdsApi = {
-  getActiveOrders: () => apiClient.get('/kitchen/orders'),
-  bumpItem: (itemId: string) => apiClient.patch(`/kitchen/items/${itemId}/bump`),
+  getActiveOrders: () => apiClient.get('/kds/expo'),
+  getStationOrders: (station: string) => apiClient.get(`/kds/station/${station}`),
+  bumpItem: (itemId: string) => apiClient.patch(`/kds/item/${itemId}/bump`),
+  fireItem: (itemId: string) => apiClient.patch(`/kds/item/${itemId}/fire`),
 };
