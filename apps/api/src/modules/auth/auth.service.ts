@@ -28,7 +28,7 @@ export class AuthService {
         email: dto.email,
         passwordHash,
         firstName: dto.firstName,
-        lastName: dto.lastName,
+        lastName: dto.lastName ?? '',
         role: 'OWNER',
         tenantId: tenant.id,
       },

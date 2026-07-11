@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Body, Query, UseGuards, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Query, UseGuards, NotFoundException } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -22,6 +22,17 @@ export class FloorController {
   @ApiOperation({ summary: 'Get all tables with status' })
   async getTables(@TenantId() tenantId: string) {
     return this.floorService.getTables(tenantId);
+  }
+
+  @Post('tables')
+  @UseGuards(RolesGuard)
+  @Roles('OWNER', 'MANAGER')
+  @ApiOperation({ summary: 'Create a new table' })
+  async createTable(
+    @Body() body: { number: number; capacity: number; section?: string; positionX?: number; positionY?: number },
+    @TenantId() tenantId: string,
+  ) {
+    return this.floorService.createTable(tenantId, body);
   }
 
   @Get('tables/:id')

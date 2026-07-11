@@ -14,6 +14,12 @@ import { Role } from '@prisma/client';
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'List staff users (alias for /users)' })
+  async listStaff(@TenantId() tenantId: string, @Query('role') role?: Role) {
+    return this.staffService.getUsers(tenantId, role);
+  }
+
   // Time Clock
   @Post('clock-in')
   @ApiOperation({ summary: 'Clock in' })

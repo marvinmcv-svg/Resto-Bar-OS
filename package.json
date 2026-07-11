@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "prettier": "^3.0.0",
-    "@prettier/plugin-sort-pnpm-lock": "^1.0.0",
     "turbo": "^2.0.0"
   }
 }

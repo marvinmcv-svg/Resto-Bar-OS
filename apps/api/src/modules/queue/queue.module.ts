@@ -4,9 +4,9 @@ import { CampaignProcessor } from './campaign.processor';
 import { ReservationReminderProcessor } from './reservation-reminder.processor';
 import { EmailModule } from '../email/email.module';
 import { PrismaService } from '../../database/prisma.service';
+import { CAMPAIGN_QUEUE, RESERVATION_REMINDER_QUEUE } from './queue.constants';
 
-export const CAMPAIGN_QUEUE = 'campaign';
-export const RESERVATION_REMINDER_QUEUE = 'reservation-reminder';
+export { CAMPAIGN_QUEUE, RESERVATION_REMINDER_QUEUE } from './queue.constants';
 
 @Module({
   imports: [

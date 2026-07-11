@@ -8,7 +8,7 @@ interface TimeSlot {
   tablesAvailable: number;
 }
 
-interface AvailabilityResult {
+export interface AvailabilityResult {
   date: string;
   partySize: number;
   slots: TimeSlot[];

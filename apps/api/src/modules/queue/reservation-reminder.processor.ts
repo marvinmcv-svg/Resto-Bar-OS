@@ -1,7 +1,7 @@
 import { Processor, Process } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bull';
-import { RESERVATION_REMINDER_QUEUE } from './queue.module';
+import { RESERVATION_REMINDER_QUEUE } from './queue.constants';
 import { EmailService } from '../email/email.service';
 import { PrismaService } from '../../database/prisma.service';
 import { format } from 'date-fns';

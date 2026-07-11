@@ -54,7 +54,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.0",
     "@types/passport-jwt": "^4.0.1",
-    "@types/stripe": "^16.0.0",
+    "@types/stripe": "^8.0.0",
     "@types/nodemailer": "^6.4.14",
     "@types/bull": "^4.10.0",
     "prisma": "^5.10.0",

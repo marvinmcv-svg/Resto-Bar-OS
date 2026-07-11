@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { CampaignStatus } from '@prisma/client';
+import { CampaignStatus, Prisma } from '@prisma/client';
 
 @Injectable()
 export class MarketingService {
@@ -16,7 +16,7 @@ export class MarketingService {
         targetSegment: Array.isArray(dto['targetSegment']) ? dto['targetSegment'] as string[] : [],
         subject: String(dto['subject'] ?? ''),
         templateId: String(dto['templateId'] ?? dto['name'] ?? ''),
-        contentJson: (dto['content'] as Record<string, unknown>) || {},
+        contentJson: ((dto['content'] as Prisma.InputJsonValue) ?? {}) as Prisma.InputJsonValue,
         status: CampaignStatus.DRAFT,
         ...(dto['sendAt'] ? { sendAt: new Date(dto['sendAt'] as string) } : {}),
       },
@@ -47,14 +47,14 @@ export class MarketingService {
       where: { id },
       data: {
         ...(dto['name'] !== undefined && { name: String(dto['name']) }),
-        ...(dto['type'] !== undefined && { type: dto['type'] }),
-        ...(dto['trigger'] !== undefined && { trigger: dto['trigger'] }),
-        ...(dto['targetSegment'] !== undefined && { targetSegment: dto['targetSegment'] }),
+        ...(dto['type'] !== undefined && { type: dto['type'] as any }),
+        ...(dto['trigger'] !== undefined && { trigger: dto['trigger'] as any }),
+        ...(dto['targetSegment'] !== undefined && { targetSegment: dto['targetSegment'] as any }),
         ...(dto['subject'] !== undefined && { subject: String(dto['subject']) }),
         ...(dto['templateId'] !== undefined && { templateId: String(dto['templateId']) }),
-        ...(dto['content'] !== undefined && { contentJson: dto['content'] }),
+        ...(dto['content'] !== undefined && { contentJson: dto['content'] as Prisma.InputJsonValue }),
         ...(dto['sendAt'] !== undefined && { sendAt: new Date(dto['sendAt'] as string) }),
-      },
+      } as any,
     });
   }
 

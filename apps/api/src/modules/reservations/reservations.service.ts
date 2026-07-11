@@ -99,7 +99,11 @@ export class ReservationsService {
   async findAll(tenantId: string, date?: string) {
     const where: any = { tenantId };
     if (date) {
-      where.date = new Date(date);
+      const d = date === 'today' ? new Date() : new Date(date);
+      d.setHours(0, 0, 0, 0);
+      const end = new Date(d);
+      end.setHours(23, 59, 59, 999);
+      where.date = { gte: d, lte: end };
     }
     return this.prisma.reservation.findMany({
       where,

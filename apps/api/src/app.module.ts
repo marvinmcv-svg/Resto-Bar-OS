@@ -9,7 +9,7 @@ import { GuestsModule } from './modules/guests/guests.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { FloorModule } from './modules/floor/floor.module';
 import { OrdersModule } from './modules/orders/orders.module';
-import { KitchenModule } from './modules/kitchen/kds.module';
+import { KDSModule } from './modules/kitchen/kds.module';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -35,7 +35,7 @@ import { HealthController } from './health.controller';
     ReservationsModule,
     FloorModule,
     OrdersModule,
-    KitchenModule,
+    KDSModule,
     InventoryModule,
     StaffModule,
     AnalyticsModule,

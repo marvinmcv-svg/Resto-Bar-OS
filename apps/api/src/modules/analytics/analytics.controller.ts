@@ -13,6 +13,14 @@ import { TenantId } from '../../common/decorators/tenant-id.decorator';
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
+  @Get('live')
+  @UseGuards(RolesGuard)
+  @Roles('OWNER', 'MANAGER')
+  @ApiOperation({ summary: 'Live service dashboard (alias for /dashboard/live)' })
+  async liveDashboardAlias(@TenantId() tenantId: string) {
+    return this.analyticsService.getLiveDashboard(tenantId);
+  }
+
   @Get('dashboard/live')
   @UseGuards(RolesGuard)
   @Roles('OWNER', 'MANAGER')

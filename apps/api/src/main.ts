@@ -3,13 +3,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { TenantMiddleware } from './middleware/tenant.middleware';
 import { PrismaService } from './database/prisma.service';
-import { Logger } from 'pino';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const logger = app.get(Logger);
 
   // Stripe webhook requires raw body for signature verification
   app.use(
@@ -23,8 +21,6 @@ async function bootstrap() {
       });
     },
   );
-  const prisma = app.get(PrismaService);
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -34,8 +30,6 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  app.use(new TenantMiddleware(prisma));
 
   app.enableCors({
     origin: process.env.ALLOWED_ORIGINS?.split(','),
@@ -55,7 +49,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
-  logger.info({ port }, 'RestaurantOS API running');
+  Logger.log(`RestaurantOS API running on port ${port}`, 'Bootstrap');
 }
 
 bootstrap();

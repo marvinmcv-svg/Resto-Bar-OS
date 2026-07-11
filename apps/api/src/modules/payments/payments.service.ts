@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { StripeService } from './stripe.service';
 import { PaymentStatus } from '@prisma/client';
@@ -7,7 +7,7 @@ import { PaymentStatus } from '@prisma/client';
 export class PaymentsService {
   constructor(
     private prisma: PrismaService,
-    private stripeService: StripeService,
+    @Inject('StripeService') private stripeService: StripeService,
   ) {}
 
   async processPayment(tenantId: string, dto: { orderId: string; amount: number; tip?: number; method: string }) {

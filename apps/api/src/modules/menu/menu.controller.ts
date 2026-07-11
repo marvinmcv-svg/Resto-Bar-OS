@@ -26,6 +26,18 @@ export class MenuController {
     return this.menuService.getMenuItems(tenantId, category, station);
   }
 
+  @Get('items')
+  @ApiOperation({ summary: 'Get all active menu items (alias for GET /menu)' })
+  @ApiQuery({ name: 'category', required: false })
+  @ApiQuery({ name: 'station', required: false, enum: Station })
+  async getMenuItemsAlias(
+    @TenantId() tenantId: string,
+    @Query('category') category?: string,
+    @Query('station') station?: Station,
+  ) {
+    return this.menuService.getMenuItems(tenantId, category, station);
+  }
+
   @Get('categories')
   @ApiOperation({ summary: 'Get all menu categories' })
   async getCategories(@TenantId() tenantId: string) {

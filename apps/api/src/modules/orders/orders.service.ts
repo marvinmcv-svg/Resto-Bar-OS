@@ -132,4 +132,16 @@ export class OrdersService {
       orderBy: { orderedAt: 'desc' },
     });
   }
+
+  async updateStatus(id: string, tenantId: string, status: OrderStatus) {
+    const order = await this.prisma.order.findFirst({ where: { id, tenantId } });
+    if (!order) throw new BadRequestException('Order not found');
+    const updated = await this.prisma.order.update({
+      where: { id },
+      data: { status },
+      include: { table: true, items: { include: { menuItem: true } } },
+    });
+    this.events.emitOrderFired(tenantId, updated);
+    return updated;
+  }
 }

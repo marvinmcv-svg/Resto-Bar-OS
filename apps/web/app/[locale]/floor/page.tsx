@@ -292,7 +292,7 @@ export default function FloorPage() {
   };
 
   // Group tables by section for the floor grid
-  const sections = [...new Set(tables.map((t) => t.section ?? 'Main'))];
+  const sections = Array.from(new Set(tables.map((t) => t.section ?? 'Main')));
   const tablesBySection = sections.reduce<Record<string, Table[]>>((acc, sec) => {
     acc[sec] = tables.filter((t) => (t.section ?? 'Main') === sec);
     return acc;
