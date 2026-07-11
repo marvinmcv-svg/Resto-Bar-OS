@@ -36,5 +36,8 @@ test-results/
 # Turbo
 .turbo/
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+
 # Misc
 *.pem
