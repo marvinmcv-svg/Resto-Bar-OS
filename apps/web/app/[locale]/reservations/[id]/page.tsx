@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useReservation, useChangeReservationStatus } from '@/hooks/useReservations';
+import { useReservation, useChangeReservationStatus, useUpdateReservationNotes } from '@/hooks/useReservations';
 import type { ReservationStatus } from '@prisma/client';
 
 const STATUS_COLORS: Record<ReservationStatus, string> = {
@@ -68,8 +68,13 @@ export default function ReservationDetailPage({ params }: { params: { id: string
   const router = useRouter();
   const { data: reservation, isLoading } = useReservation(params.id);
   const changeStatus = useChangeReservationStatus();
-  const [notes, setNotes] = useState(reservation?.notes ?? '');
+  const updateNotes = useUpdateReservationNotes();
+  const [notes, setNotes] = useState('');
   const [editingNotes, setEditingNotes] = useState(false);
+
+  useEffect(() => {
+    if (reservation?.notes != null) setNotes(reservation.notes);
+  }, [reservation?.notes]);
 
   if (isLoading) return <div className="p-8 text-text-muted">Loading...</div>;
   if (!reservation) return <div className="p-8 text-red-400">Reservation not found</div>;
@@ -248,10 +253,16 @@ export default function ReservationDetailPage({ params }: { params: { id: string
                   Cancel
                 </button>
                 <button
-                  onClick={() => setEditingNotes(false)}
-                  className="px-4 py-2 bg-accent-gold text-bg-primary rounded font-medium text-sm"
+                  onClick={() => {
+                    updateNotes.mutate(
+                      { id: params.id, notes },
+                      { onSuccess: () => setEditingNotes(false) },
+                    );
+                  }}
+                  disabled={updateNotes.isPending}
+                  className="px-4 py-2 bg-accent-gold text-bg-primary rounded font-medium text-sm disabled:opacity-50"
                 >
-                  Save
+                  {updateNotes.isPending ? 'Saving…' : 'Save'}
                 </button>
               </div>
             </div>

@@ -13,6 +13,12 @@ import { TenantId } from '../../common/decorators/tenant-id.decorator';
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'List all ingredients (alias for /ingredients)' })
+  async listAll(@TenantId() tenantId: string, @Query('category') category?: string) {
+    return this.inventoryService.getIngredients(tenantId, category);
+  }
+
   @Get('ingredients')
   @ApiOperation({ summary: 'List all ingredients' })
   async getIngredients(@TenantId() tenantId: string, @Query('category') category?: string) {

@@ -14,6 +14,12 @@ import { Role } from '@prisma/client';
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
+  @Get()
+  @ApiOperation({ summary: 'List staff users (alias for /users)' })
+  async listStaff(@TenantId() tenantId: string, @Query('role') role?: Role) {
+    return this.staffService.getUsers(tenantId, role);
+  }
+
   // Time Clock
   @Post('clock-in')
   @ApiOperation({ summary: 'Clock in' })
@@ -78,7 +84,11 @@ export class StaffController {
   // Tips
   @Post('tips/distribute')
   @ApiOperation({ summary: 'Distribute tips for an order' })
-  async distributeTips(@Body('orderId') orderId: string, @Body('tipAmount') tipAmount: number) {
-    return this.staffService.distributeTips(orderId, tipAmount);
+  async distributeTips(
+    @TenantId() tenantId: string,
+    @Body('orderId') orderId: string,
+    @Body('tipAmount') tipAmount: number,
+  ) {
+    return this.staffService.distributeTips(tenantId, orderId, tipAmount);
   }
 }

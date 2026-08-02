@@ -13,7 +13,7 @@ interface AvailableSlot {
   availableTables: number;
 }
 
-interface SlotCoverage {
+export interface SlotCoverage {
   time: string;
   period: 'LUNCH' | 'DINNER';
   tables: {
@@ -133,7 +133,7 @@ export class FloorService {
   async assignTableForReservation(tenantId: string, tableId: string): Promise<void> {
     await this.prisma.table.updateMany({
       where: { id: tableId, tenantId },
-      data: { status: TableStatus.OCCUPIED },
+      data: { status: TableStatus.RESERVED },
     });
   }
 
@@ -224,6 +224,20 @@ export class FloorService {
     return this.prisma.table.updateMany({
       where: { id, tenantId },
       data: { status },
+    });
+  }
+
+  async createTable(tenantId: string, dto: { number: number; capacity: number; section?: string; positionX?: number; positionY?: number }) {
+    return this.prisma.table.create({
+      data: {
+        tenantId,
+        number: dto.number,
+        capacity: dto.capacity,
+        section: dto.section ?? 'MAIN',
+        positionX: dto.positionX ?? 0,
+        positionY: dto.positionY ?? 0,
+        status: TableStatus.AVAILABLE,
+      },
     });
   }
 }

@@ -1,4 +1,5 @@
 import { IsDateString, IsInt, Min } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CheckAvailabilityDto {
@@ -7,6 +8,7 @@ export class CheckAvailabilityDto {
   date!: string;
 
   @ApiProperty({ example: 4 })
+  @Type(() => Number)
   @IsInt() @Min(1)
   partySize!: number;
 }

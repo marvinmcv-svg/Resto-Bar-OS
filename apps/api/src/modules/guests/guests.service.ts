@@ -67,7 +67,7 @@ export class GuestsService {
     await this.findOne(id, tenantId);
     return this.prisma.guest.update({
       where: { id, tenantId },
-      data: dto as Parameters<typeof this.prisma.guest.update>[0]['data'],
+      data: dto as any,
     });
   }
 
@@ -97,7 +97,7 @@ export class GuestsService {
       where: { id, tenantId },
       include: {
         orders: {
-          include: { table: true, server: { select: { firstName: true, lastName: true } } },
+          include: { table: true, server: { select: { firstName: true, lastName: true } }, items: true },
           orderBy: { orderedAt: 'desc' },
         },
       },

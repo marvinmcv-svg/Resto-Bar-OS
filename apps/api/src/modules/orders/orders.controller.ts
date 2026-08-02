@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { OrdersService } from './orders.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -31,6 +31,18 @@ export class OrdersController {
   @Get(':id')
   @ApiOperation({ summary: 'Get order by ID' })
   async findOne(@Param('id') id: string, @TenantId() tenantId: string) {
-    return this.ordersService.findAll(tenantId).then(orders => orders.find(o => o.id === id));
+    return this.ordersService.findOne(id, tenantId);
+  }
+
+  @Patch(':id/status')
+  @UseGuards(RolesGuard)
+  @Roles('OWNER', 'MANAGER', 'SERVER', 'KITCHEN')
+  @ApiOperation({ summary: 'Update order status' })
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: OrderStatus,
+    @TenantId() tenantId: string,
+  ) {
+    return this.ordersService.updateStatus(id, tenantId, status);
   }
 }

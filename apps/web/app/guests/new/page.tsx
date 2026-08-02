@@ -103,7 +103,8 @@ export default function NewGuestPage() {
 
     try {
       const result = await createGuest.mutateAsync(payload as Record<string, unknown>);
-      const newId = result?.id || result?.data?.id;
+      const r = result as any;
+      const newId = r?.id || r?.data?.id;
       if (newId) {
         router.push(`/guests/${newId}`);
       } else {

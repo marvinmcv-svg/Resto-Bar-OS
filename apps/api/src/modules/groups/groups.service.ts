@@ -35,6 +35,7 @@ export class GroupsService {
                 status: 'COMPLETED',
                 orderedAt: { gte: new Date(new Date().setHours(0, 0, 0, 0)) },
               },
+              include: { items: true },
             },
           },
         },

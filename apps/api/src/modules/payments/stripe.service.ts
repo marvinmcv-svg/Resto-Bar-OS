@@ -44,3 +44,5 @@ export class StripeSimulatedService {
     return { type: 'payment_intent.succeeded', data: { object: {} } };
   }
 }
+
+export type StripeService = StripeSimulatedService;

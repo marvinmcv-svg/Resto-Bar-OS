@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Providers } from './providers';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration/ServiceWorkerRegistration';
 import { InstallPrompt } from '@/components/InstallPrompt/InstallPrompt';
 
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen bg-bg-primary text-white font-ui antialiased">
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <ServiceWorkerRegistration />
         <InstallPrompt />
       </body>

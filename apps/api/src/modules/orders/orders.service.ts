@@ -1,10 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { EventsGateway } from '../events/events.gateway';
 import { OrderStatus, OrderSource, ItemStatus } from '@prisma/client';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private events: EventsGateway,
+  ) {}
 
   async createOrder(dto: any, tenantId: string) {
     const table = await this.prisma.table.findFirst({ where: { id: dto.tableId, tenantId } });
@@ -66,6 +70,7 @@ export class OrdersService {
     });
 
     await this.deductInventory(order.id);
+    this.events.emitOrderFired(tenantId, order);
     return order;
   }
 
@@ -111,6 +116,13 @@ export class OrdersService {
     }
   }
 
+  async findOne(id: string, tenantId: string) {
+    return this.prisma.order.findFirst({
+      where: { id, tenantId },
+      include: { table: true, server: true, guest: true, items: { include: { menuItem: true } } },
+    });
+  }
+
   async findAll(tenantId: string, status?: OrderStatus) {
     const where: any = { tenantId };
     if (status) where.status = status;
@@ -119,5 +131,17 @@ export class OrdersService {
       include: { table: true, server: true, guest: true, items: { include: { menuItem: true } } },
       orderBy: { orderedAt: 'desc' },
     });
+  }
+
+  async updateStatus(id: string, tenantId: string, status: OrderStatus) {
+    const order = await this.prisma.order.findFirst({ where: { id, tenantId } });
+    if (!order) throw new BadRequestException('Order not found');
+    const updated = await this.prisma.order.update({
+      where: { id },
+      data: { status },
+      include: { table: true, items: { include: { menuItem: true } } },
+    });
+    this.events.emitOrderFired(tenantId, updated);
+    return updated;
   }
 }

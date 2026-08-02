@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { CheckAvailabilityDto } from '../dto/check-availability.dto';
-import { CreatePublicReservationDto } from '../dto/create-public-reservation.dto';
+import { CheckAvailabilityDto } from './dto/check-availability.dto';
+import { CreatePublicReservationDto } from './dto/create-public-reservation.dto';
 
 interface TimeSlot {
   time: string;
   tablesAvailable: number;
 }
 
-interface AvailabilityResult {
+export interface AvailabilityResult {
   date: string;
   partySize: number;
   slots: TimeSlot[];
